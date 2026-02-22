@@ -23,7 +23,7 @@ module control_unit (
             end
             7'b0010011: begin // addi
                 branch     = 0; mem_read  = 0; mem_to_reg = 0;
-                alu_op     = 2'b10;
+                alu_op     = 2'b00;
                 mem_write  = 0; alu_src   = 1; reg_write  = 1;
             end
             7'b0000011: begin // ld
