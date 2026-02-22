@@ -82,7 +82,7 @@ PC update:
 | Instruction | opcode      | branch | mem_read | mem_to_reg | alu_op | mem_write | alu_src | reg_write |
 |-------------|-------------|--------|----------|------------|--------|-----------|---------|-----------|
 | add/sub/and/or | `0110011` | 0 | 0 | 0 | `10` | 0 | 0 | 1 |
-| addi        | `0010011`   | 0      | 0        | 0          | `10`   | 0         | 1       | 1         |
+| addi        | `0010011`   | 0      | 0        | 0          | `00`   | 0         | 1       | 1         |
 | ld          | `0000011`   | 0      | 1        | 1          | `00`   | 0         | 1       | 1         |
 | sd          | `0100011`   | 0      | 0        | 0          | `00`   | 1         | 1       | 0         |
 | beq         | `1100011`   | 1      | 0        | 0          | `01`   | 0         | 0       | 0         |
@@ -117,9 +117,9 @@ PC update:
 
 | `alu_op` | Meaning | `alu_control_signal` |
 |----------|---------|---------------------|
-| `00`     | ld/sd → always ADD | `0010` |
+| `00`     | ld / sd / addi → always ADD | `0010` |
 | `01`     | beq → always SUB (result=0 means equal) | `0110` |
-| `10`, funct3=`000`, funct7[30]=0 | add/addi | `0010` |
+| `10`, funct3=`000`, funct7[30]=0 | add | `0010` |
 | `10`, funct3=`000`, funct7[30]=1 | sub | `0110` |
 | `10`, funct3=`111` | and | `0000` |
 | `10`, funct3=`110` | or  | `0001` |
@@ -170,9 +170,9 @@ Flow: read_data1 - read_data2 → alu_result → registers[rd]
 
 ### `addi rd, rs1, imm`
 ```
-Control: alu_src=1, alu_op=10, reg_write=1
+Control: alu_src=1, alu_op=00, reg_write=1
 Imm gen: sign-extend inst[31:20] → imm_extended
-ALU ctrl: funct3=000, funct7[30]=0 → 0010 (ADD)
+ALU ctrl: 00 → 0010 (ADD, always — avoids funct7 misinterpretation on negative immediates)
 Flow: read_data1 + imm_extended → alu_result → registers[rd]
 ```
 
