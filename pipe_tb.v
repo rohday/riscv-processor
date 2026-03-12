@@ -1,17 +1,17 @@
-`include "datapath.v"
+`include "pipe_datapath.v"
 
-module seq_tb;
+module pipe_tb;
     reg  clk;
     reg  reset;
 
     wire [31:0] instruction_word;
     wire [63:0] pc_current;
 
-    datapath DUT (
-        .clk              (clk),
-        .reset            (reset),
-        .instruction_word (instruction_word),
-        .pc_current       (pc_current)
+    pipe_datapath DUT (
+        .clk                (clk),
+        .reset              (reset),
+        .instruction_word_out (instruction_word),
+        .pc_current         (pc_current)
     );
 
     initial clk = 0;
@@ -28,8 +28,8 @@ module seq_tb;
         reset = 0;
 
         forever begin
+            // Check the instruction word coming out of IF stage
             if (instruction_word == 32'h00000000) begin
-                cycle_count = cycle_count + 1;
                 @(posedge clk); #1;
                 fd = $fopen("register_file.txt", "w");
                 for (i = 0; i < 32; i = i + 1)

@@ -17,6 +17,7 @@ module register_file (
             registers[i] = 64'b0;
     end
 
+    // Synchronous write on positive edge
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             for (i = 0; i < 32; i = i + 1)

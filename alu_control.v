@@ -15,11 +15,11 @@ module alu_control (
 );
     always @(*) begin
         case (alu_op)
-            2'b00: alu_control_signal = 4'b0010; // ADD (ld/sd)
+            2'b00: alu_control_signal = 4'b0010; // ADD (ld/sd/addi)
             2'b01: alu_control_signal = 4'b0110; // SUB (beq)
             2'b10: begin
                 case (funct3)
-                    3'b000: alu_control_signal = funct7_bit30 ? 4'b0110 : 4'b0010; // sub : add / addi
+                    3'b000: alu_control_signal = funct7_bit30 ? 4'b0110 : 4'b0010; // sub : add
                     3'b111: alu_control_signal = 4'b0000; // and
                     3'b110: alu_control_signal = 4'b0001; // or
                     default: alu_control_signal = 4'b0010;
